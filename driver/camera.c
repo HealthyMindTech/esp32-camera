@@ -202,17 +202,17 @@ static int skip_frame()
     }
     int64_t st_t = esp_timer_get_time();
     while (_gpio_get_level(s_state->config.pin_vsync) == 0) {
-        if((esp_timer_get_time() - st_t) > 1000000LL){
+        if((esp_timer_get_time() - st_t) > 10000000LL){
             goto timeout;
         }
     }
     while (_gpio_get_level(s_state->config.pin_vsync) != 0) {
-        if((esp_timer_get_time() - st_t) > 1000000LL){
+        if((esp_timer_get_time() - st_t) > 10000000LL){
             goto timeout;
         }
     }
     while (_gpio_get_level(s_state->config.pin_vsync) == 0) {
-        if((esp_timer_get_time() - st_t) > 1000000LL){
+        if((esp_timer_get_time() - st_t) > 10000000LL){
             goto timeout;
         }
     }
@@ -1355,6 +1355,7 @@ esp_err_t camera_init(const camera_config_t* config)
     }
 
     if (skip_frame()) {
+        ESP_LOGE(TAG, "Failed to skip frame");
         err = ESP_ERR_CAMERA_FAILED_TO_SET_OUT_FORMAT;
         goto fail;
     }
